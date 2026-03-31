@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Address } from "~~/components/scaffold-eth";
+import { Address } from "@scaffold-ui/components";
 
 type NFT = {
   id: bigint;
