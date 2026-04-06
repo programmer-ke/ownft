@@ -18,7 +18,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
     You can generate a random account with `yarn generate` or `yarn account:import` to import your
     existing PK which will fill DEPLOYER_PRIVATE_KEY_ENCRYPTED in the .env file (then used on hardhat.config.ts)
     You can run the `yarn account` command to check your balance in every network.
-  */
+
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
@@ -35,6 +35,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   // Get the deployed contract to interact with it after deploying.
   const yourContract = await hre.ethers.getContract<Contract>("YourContract", deployer);
   console.log("👋 Initial greeting:", await yourContract.greeting());
+  */  
 };
 
 export default deployYourContract;
