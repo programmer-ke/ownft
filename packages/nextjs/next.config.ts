@@ -17,15 +17,15 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-	protocol: 'https',
-	hostname: 'ipfs.io',
+        protocol: "https",
+        hostname: "ipfs.io",
       },
       {
-	protocol: 'https',
-	hostname: '*.mypinata.cloud',
+        protocol: "https",
+        hostname: "*.mypinata.cloud",
       },
-    ]
-  }
+    ],
+  },
 };
 
 const isIpfs = process.env.NEXT_PUBLIC_IPFS_BUILD === "true";

@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import NFTDisplay from "~~/components/NFTDisplay";
 import MintNft from "~~/components/MintNft";
+import NFTDisplay from "~~/components/NFTDisplay";
 import { useScaffoldContract, useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 
 const Home: NextPage = () => {
-
   const [loadingNFTs, setLoadingNFTs] = useState(true);
   const [allNFTs, setAllNFTs] = useState<any[]>();
 
@@ -18,7 +17,7 @@ const Home: NextPage = () => {
     functionName: "totalSupply",
   });
 
-  const { data: contract } = useScaffoldContract({contractName: "Ownft"});
+  const { data: contract } = useScaffoldContract({ contractName: "Ownft" });
 
   useEffect(() => {
     let cancelled = false;
@@ -33,25 +32,25 @@ const Home: NextPage = () => {
       const startIndex = remainder - 1n;
       const stopIndex = remainder > perPage ? startIndex - perPage : startIndex - remainder;
       for (let tokenIndex = startIndex; tokenIndex > stopIndex; tokenIndex--) {
-	try {
-	  const tokenId = await contract.read.tokenByIndex([tokenIndex]);
-	  const tokenURI = await contract.read.tokenURI([tokenId]);
-	  const jsonManifestString = atob(tokenURI.substring(29));
+        try {
+          const tokenId = await contract.read.tokenByIndex([tokenIndex]);
+          const tokenURI = await contract.read.tokenURI([tokenId]);
+          const jsonManifestString = atob(tokenURI.substring(29));
 
-	  try {
-	    const jsonManifest = JSON.parse(jsonManifestString);
-	    nftUpdate.push({ id: tokenId, uri: tokenURI, ...jsonManifest });
-	  } catch (e) {
-	    console.error(e);
-	  }
-	} catch (e) {
-	  console.error(e);
-	}
+          try {
+            const jsonManifest = JSON.parse(jsonManifestString);
+            nftUpdate.push({ id: tokenId, uri: tokenURI, ...jsonManifest });
+          } catch (e) {
+            console.error(e);
+          }
+        } catch (e) {
+          console.error(e);
+        }
       }
 
       if (!cancelled) {
-	setAllNFTs(nftUpdate);
-	setLoadingNFTs(false);
+        setAllNFTs(nftUpdate);
+        setLoadingNFTs(false);
       }
     }
 
@@ -59,14 +58,13 @@ const Home: NextPage = () => {
 
     return () => {
       cancelled = true;
-    }
-    
+    };
   }, [totalSupply, page, contract?.address]);
   return (
     <>
       <div className="flex items-center flex-col flex-grow pt-10">
         <p className="block text-4xl font-bold"> Your Own NFTs </p>
-	<MintNft />
+        <MintNft />
       </div>
 
       <NFTDisplay
@@ -77,7 +75,6 @@ const Home: NextPage = () => {
         totalTokenCount={totalSupply}
         perPage={perPage}
       />
-      
     </>
   );
 };

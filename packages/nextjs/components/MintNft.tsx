@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { pinata } from "~~/utils/config";
 import { useAccount } from "wagmi";
+import { pinata } from "~~/utils/config";
 
 export default function MintNft() {
   const { address: connectedAddress } = useAccount();
@@ -21,10 +21,8 @@ export default function MintNft() {
       const urlRequest = await fetch("/api/url"); // Fetches the temporary upload URL
       const urlResponse = await urlRequest.json(); // Parse response
       console.log(urlResponse);
-      const upload = await pinata.upload.public
-        .file(file)
-        .url(urlResponse.url); // Upload the file with the signed URL
-      const fileUrl = await pinata.gateways.public.convert(upload.cid)
+      const upload = await pinata.upload.public.file(file).url(urlResponse.url); // Upload the file with the signed URL
+      const fileUrl = await pinata.gateways.public.convert(upload.cid);
       setUrl(fileUrl);
       setUploading(false);
     } catch (e) {
@@ -40,15 +38,15 @@ export default function MintNft() {
 
   return (
     <div className="flex flex-col gap-4 items-center w-full max-w-md mx-auto">
-      <input 
-        type="file" 
-        onChange={handleChange} 
+      <input
+        type="file"
+        onChange={handleChange}
         disabled={!connectedAddress}
         className="file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-content hover:file:bg-primary-focus w-full"
       />
-      <button 
-        type="button" 
-        disabled={uploading || !connectedAddress} 
+      <button
+        type="button"
+        disabled={uploading || !connectedAddress}
         onClick={uploadFile}
         className="btn btn-primary w-full sm:w-auto"
       >
