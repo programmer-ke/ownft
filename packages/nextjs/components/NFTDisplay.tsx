@@ -21,14 +21,14 @@ type NFTDisplayProps = {
   perPage: bigint;
 };
 
-export const NFTDisplay = ({
+export default function NFTDisplay({
   loadingNFTs: loadingNFTs,
   allNFTs: allNFTs,
   page,
   setPage,
   totalTokenCount,
   perPage,
-}: NFTDisplayProps) => {
+}: NFTDisplayProps) {
   return (
     <div className="flex-grow bg-base-300 w-full mt-4 p-8 flex justify-center items-center space-x-2">
       {loadingNFTs ? (

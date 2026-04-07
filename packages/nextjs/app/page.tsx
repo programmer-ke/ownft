@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import { useAccount } from "wagmi";
-import { NFTDisplay } from "~~/components/NFTDisplay";
+import NFTDisplay from "~~/components/NFTDisplay";
+import MintNft from "~~/components/MintNft";
 import { useScaffoldContract, useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 
 const Home: NextPage = () => {
-  const { address: connectedAddress } = useAccount();
 
   const [loadingNFTs, setLoadingNFTs] = useState(true);
   const [allNFTs, setAllNFTs] = useState<any[]>();
@@ -67,14 +66,7 @@ const Home: NextPage = () => {
     <>
       <div className="flex items-center flex-col flex-grow pt-10">
         <p className="block text-4xl font-bold"> Your Own NFTs </p>
-        <button
-          onClick={async () => {
-          }}
-          className="btn btn-primary"
-          disabled={!connectedAddress}
-        >
-          Mint now
-        </button>
+	<MintNft />
       </div>
 
       <NFTDisplay
