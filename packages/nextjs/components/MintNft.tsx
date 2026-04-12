@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useFetchNativeCurrencyPrice } from "@scaffold-ui/hooks";
 import toast from "react-hot-toast";
 import { useAccount } from "wagmi";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
@@ -14,10 +15,15 @@ export default function MintNft() {
   const [description, setDescription] = useState("");
   const [royaltyPct, setRoyaltyPct] = useState(0);
   const [minting, setMinting] = useState(false);
+  const [mintingPrice, setMintingPrice] = useState(0);
+  const [displayPrice, setDisplayPrice] = useState(0);
+
+  const USD_CENTS_PER_MB = 12;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { writeContractAsync } = useScaffoldWriteContract({ contractName: "Ownft" });
+  const { price: nativeCurrencyPrice } = useFetchNativeCurrencyPrice();
 
   const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return bytes + " bytes";
@@ -45,6 +51,7 @@ export default function MintNft() {
         {
           functionName: "mintNft",
           args: [description, fileUrl, BigInt(royaltyPct * 100)],
+          value: BigInt(Math.round(mintingPrice * 1e18)),
         },
         {
           onBlockConfirmation: txnReceipt => {
@@ -61,6 +68,8 @@ export default function MintNft() {
             setFileSize(null);
             setInvalidFileType(false);
             setMinting(false);
+            setMintingPrice(0);
+            setDisplayPrice(0);
           },
         },
       );
@@ -75,12 +84,22 @@ export default function MintNft() {
     const selectedFile = e.target?.files?.[0];
     setFile(selectedFile);
     if (selectedFile) {
-      console.log(selectedFile);
       setFileSize(selectedFile.size);
-      setInvalidFileType(!selectedFile.type.startsWith("image/"));
+      const isImage = selectedFile.type.startsWith("image/");
+      setInvalidFileType(!isImage);
+
+      if (Boolean(nativeCurrencyPrice) && isImage) {
+        const MB = 2 ** 20;
+        const fileSizeUnits = selectedFile.size < MB ? 1 : selectedFile.size / MB;
+        const price = (USD_CENTS_PER_MB / 100 / nativeCurrencyPrice) * fileSizeUnits;
+        setMintingPrice(price);
+        setDisplayPrice((USD_CENTS_PER_MB / 100) * fileSizeUnits);
+      }
     } else {
       setFileSize(null);
       setInvalidFileType(false);
+      setMintingPrice(0);
+      setDisplayPrice(0);
     }
   };
 
@@ -110,7 +129,7 @@ export default function MintNft() {
               {invalidFileType ? (
                 <span className="text-error">Invalid file type. Please select an image.</span>
               ) : fileSize ? (
-                `Selected file size: ${formatFileSize(fileSize)}`
+                `Selected file size: ${formatFileSize(fileSize)} (Minting $${displayPrice.toFixed(2)})`
               ) : (
                 "Select an image file (PNG, JPG, GIF, etc.) *"
               )}
