@@ -10,6 +10,7 @@ export default function MintNft() {
   const { address: connectedAddress } = useAccount();
   const [file, setFile] = useState<File>();
   const [fileSize, setFileSize] = useState<number | null>(null);
+  const [invalidFileType, setInvalidFileType] = useState(false);
   const [description, setDescription] = useState("");
   const [royaltyPct, setRoyaltyPct] = useState(0);
   const [minting, setMinting] = useState(false);
@@ -58,6 +59,7 @@ export default function MintNft() {
             }
             setFile(undefined);
             setFileSize(null);
+            setInvalidFileType(false);
             setMinting(false);
           },
         },
@@ -75,15 +77,17 @@ export default function MintNft() {
     if (selectedFile) {
       console.log(selectedFile);
       setFileSize(selectedFile.size);
+      setInvalidFileType(!selectedFile.type.startsWith("image/"));
     } else {
       setFileSize(null);
+      setInvalidFileType(false);
     }
   };
 
   const validMintParams = () => {
     const validRoyaltyPct = royaltyPct >= 0 && royaltyPct <= 10;
     const validDescription = Boolean(description);
-    const validFile = Boolean(file); // todo: add filetype checks
+    const validFile = Boolean(file) && !invalidFileType;
     return validRoyaltyPct && validDescription && validFile;
   };
 
@@ -103,9 +107,13 @@ export default function MintNft() {
           />
           <label className="label">
             <span className="label-text-alt">
-              {fileSize
-                ? `Selected file size: ${formatFileSize(fileSize)}`
-                : "Select an image file (PNG, JPG, GIF, etc.) *"}
+              {invalidFileType ? (
+                <span className="text-error">Invalid file type. Please select an image.</span>
+              ) : fileSize ? (
+                `Selected file size: ${formatFileSize(fileSize)}`
+              ) : (
+                "Select an image file (PNG, JPG, GIF, etc.) *"
+              )}
             </span>
           </label>
         </div>
