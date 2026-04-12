@@ -9,6 +9,6 @@
   - [ ] proper validation e.g. image filetypes
   - [ ] mint amount calculations based on file types
   - [ ] Adverserial uploads testing
-
+  - [ ] test nft minting with ipfs uri
 
 # done
