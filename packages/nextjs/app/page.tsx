@@ -19,6 +19,13 @@ const Home: NextPage = () => {
 
   const { data: contract } = useScaffoldContract({ contractName: "Ownft" });
 
+  const updateNFTDescription = (tokenId: bigint, newDescription: string) => {
+    setAllNFTs(prevNFTs => {
+      if (!prevNFTs) return prevNFTs;
+      return prevNFTs.map(nft => (nft.id === tokenId ? { ...nft, description: newDescription } : nft));
+    });
+  };
+
   useEffect(() => {
     let cancelled = false;
 
@@ -72,6 +79,7 @@ const Home: NextPage = () => {
         allNFTs={allNFTs}
         page={page}
         setPage={setPage}
+        updateNFTDescription={updateNFTDescription}
         totalTokenCount={totalSupply}
         perPage={perPage}
       />
