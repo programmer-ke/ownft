@@ -92,11 +92,11 @@ export default function NFTDisplay({
               return (
                 <div
                   key={nft.id}
-                  className="flex flex-col bg-base-100 p-5 text-center items-center max-w-xs rounded-3xl"
+                  className="flex flex-col bg-base-100 p-5 text-center items-center max-w-xs rounded-3xl h-full"
                 >
                   <h2 className="">{nft.name}</h2>
-                  <Image src={nft.image} alt={nft.name} width={300} height={300} />
-                  <div className="flex items-center gap-2 mt-2">
+                  <Image src={nft.image} alt={nft.name} width={300} height={300} className="max-w-full max-h-64 object-contain flex-shrink-0"/>
+                  <div className="flex items-center gap-2 mt-2 mt-auto">
                     {isEditing ? (
                       <div className="flex flex-col w-full">
                         <input
