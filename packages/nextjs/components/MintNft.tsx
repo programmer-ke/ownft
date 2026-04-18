@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useFetchNativeCurrencyPrice } from "@scaffold-ui/hooks";
 import toast from "react-hot-toast";
 import { useAccount } from "wagmi";
+import { getSignedUploadUrl } from "~~/app/actions";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { pinata } from "~~/utils/config";
 
@@ -40,10 +41,19 @@ export default function MintNft() {
     try {
       setMinting(true);
 
-      const urlRequest = await fetch("/api/url"); // Fetches the temporary upload URL
-      const urlResponse = await urlRequest.json(); // Parse response
-      console.log(urlResponse);
-      const upload = await pinata.upload.public.file(file).url(urlResponse.url); // Upload the file with the signed URL
+      let url;
+      try {
+        const result = await getSignedUploadUrl();
+        url = result.url;
+        console.log("result", result);
+      } catch (error) {
+        console.error(error);
+        toast.error("Something went wrong, try again");
+        setMinting(false);
+        return;
+      }
+
+      const upload = await pinata.upload.public.file(file).url(url);
       const fileUrl = await pinata.gateways.public.convert(upload.cid);
 
       // mint NFT

@@ -8,8 +8,8 @@
   - [x] style front-end for status, error messages and styles
   - [x] proper validation e.g. image filetypes
   - [x] mint amount calculations based on file size
-  - [ ] add editing functionality
-  - [ ] Adverserial uploads testing
+  - [x] add editing functionality
+  - [x] Adverserial uploads testing
   - [ ] test nft minting with ipfs uri
 
 # done
