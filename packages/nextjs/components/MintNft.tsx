@@ -54,13 +54,13 @@ export default function MintNft() {
       }
 
       const upload = await pinata.upload.public.file(file).url(url);
-      const fileUrl = await pinata.gateways.public.convert(upload.cid);
+      const ipfsUri = `ipfs://${upload.cid}`;
 
       // mint NFT
       await writeContractAsync(
         {
           functionName: "mintNft",
-          args: [description, fileUrl, BigInt(royaltyPct * 100)],
+          args: [description, ipfsUri, BigInt(royaltyPct * 100)],
           value: BigInt(Math.round(mintingPrice * 1e18)),
         },
         {
