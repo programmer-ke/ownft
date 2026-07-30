@@ -10,6 +10,6 @@
   - [x] mint amount calculations based on file size
   - [x] add editing functionality
   - [x] Adverserial uploads testing
-  - [ ] test nft minting with ipfs uri
+  - [x] test nft minting with ipfs uri
 
 # done
