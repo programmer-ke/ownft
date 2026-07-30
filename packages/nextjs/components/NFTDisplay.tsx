@@ -130,11 +130,14 @@ export default function NFTDisplay({
                       <>
                         <p>{nft.description}</p>
                         {isOwner && (
-                          <PencilIcon
-                            className="h-5 w-5 cursor-pointer text-gray-300 hover:text-gray-700"
+                          <button
+                            type="button"
+                            aria-label={`Edit description for ${nft.name}`}
                             onClick={() => handleEdit(nft.id, nft.description)}
-                            title="Edit NFT"
-                          />
+                            className="text-gray-300 hover:text-gray-700"
+                          >
+                            <PencilIcon className="h-5 w-5" aria-hidden="true" />
+                          </button>
                         )}
                       </>
                     )}
