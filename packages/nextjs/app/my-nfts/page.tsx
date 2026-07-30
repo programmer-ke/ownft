@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import MintNft from "~~/components/MintNft";
-import NFTDisplay from "~~/components/NFTDisplay";
+import NFTDisplay, { type NFT } from "~~/components/NFTDisplay";
 import { useScaffoldContract, useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 
 const MyNFTs: NextPage = () => {
   const { address: connectedAddress } = useAccount();
   const [loadingNFTs, setLoadingNFTs] = useState(true);
-  const [allNFTs, setAllNFTs] = useState<any[]>();
+  const [allNFTs, setAllNFTs] = useState<NFT[]>();
 
   const [page, setPage] = useState(1n);
   const perPage = 12n;

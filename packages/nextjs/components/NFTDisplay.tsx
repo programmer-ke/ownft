@@ -8,7 +8,7 @@ import { useAccount } from "wagmi";
 import { CheckIcon, PencilIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
-type NFT = {
+export type NFT = {
   id: bigint;
   uri: string;
   name: string;
