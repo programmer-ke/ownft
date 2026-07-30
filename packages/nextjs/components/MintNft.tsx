@@ -54,6 +54,9 @@ export default function MintNft() {
       }
 
       const upload = await pinata.upload.public.file(file).url(url);
+      if (!upload.cid) {
+        throw new Error("Upload failed: no CID returned");
+      }
       const ipfsUri = `ipfs://${upload.cid}`;
 
       // mint NFT
