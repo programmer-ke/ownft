@@ -43,7 +43,7 @@ const MyNFTs: NextPage = () => {
       const stopIndex = remainder > perPage ? startIndex - perPage : startIndex - remainder;
       for (let tokenIndex = startIndex; tokenIndex > stopIndex; tokenIndex--) {
         try {
-          const tokenId = await contract.read.tokenByIndex([tokenIndex]);
+          const tokenId = await contract.read.tokenOfOwnerByIndex([connectedAddress, tokenIndex]);
           const tokenURI = await contract.read.tokenURI([tokenId]);
           const jsonManifestString = atob(tokenURI.substring(29));
 
