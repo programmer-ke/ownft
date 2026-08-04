@@ -78,7 +78,7 @@ export default function NFTDisplay({
   return (
     <div className="flex-grow bg-base-300 w-full mt-4 p-8 flex justify-center items-center space-x-2">
       {loadingNFTs ? (
-        <p className="">Loading...</p>
+        <p className="">No NFTs loaded</p>
       ) : !allNFTs?.length ? (
         <p className="font-medium">No NFTs minted</p>
       ) : (
