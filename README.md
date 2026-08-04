@@ -14,30 +14,36 @@ Before you begin, you need to install the following tools:
 
 To get started with Scaffold-ETH 2, follow the steps below:
 
-1. Install dependencies if it was skipped in CLI:
+1. Install dependencies
 
 ```
-cd my-dapp-example
+cd ownft
 yarn install
 ```
 
-2. Run a local network in the first terminal:
+2. Set the external Ownft contract's address and ABI in
+   `packages/nextjs/contracts/externalContracts.ts`.
+
+You can find the contract source
+[here](https://github.com/programmer-ke/ownft-contract).
+
+Upload it to the selected Ethereum chain (Sepolia / Base Sepolia /
+Mainnet etc) then set its address and ABI.
+
+3. Set the [Pinata](https://pinata.cloud/) credentials used to upload and pin the NFTs on IPFS.
+
+In `packages/nextjs`:
 
 ```
-yarn chain
+mv .env.example .env
 ```
 
-This command starts a local Ethereum network using Hardhat. The network runs on your local machine and can be used for testing and development. You can customize the network configuration in `packages/hardhat/hardhat.config.ts`.
+Then set the following from your Pinata account:
 
-3. On a second terminal, deploy the test contract:
+- `PINATA_JWT`
+- `NEXT_PUBLIC_PINATA_GATEWAY`
 
-```
-yarn deploy
-```
-
-This command deploys a test smart contract to the local network. The contract is located in `packages/hardhat/contracts` and can be modified to suit your needs. The `yarn deploy` command uses the deploy script located in `packages/hardhat/deploy` to deploy the contract to the network. You can also customize the deploy script.
-
-4. On a third terminal, start your NextJS app:
+4. On the terminal, start the NextJS app from the project root:
 
 ```
 yarn start
@@ -45,8 +51,43 @@ yarn start
 
 Visit your app on: `http://localhost:3000`. You can interact with your smart contract using the `Debug Contracts` page. You can tweak the app config in `packages/nextjs/scaffold.config.ts`.
 
-Run smart contract test with `yarn hardhat:test`
-
-- Edit your smart contracts in `packages/hardhat/contracts`
 - Edit your frontend homepage at `packages/nextjs/app/page.tsx`. For guidance on [routing](https://nextjs.org/docs/app/building-your-application/routing/defining-routes) and configuring [pages/layouts](https://nextjs.org/docs/app/building-your-application/routing/pages-and-layouts) checkout the Next.js documentation.
-- Edit your deployment scripts in `packages/hardhat/deploy`
+
+## Deployment
+
+### Deploying the Contract
+
+Deploy the contract to the selected network. See the [contract repository][repo] for more information.
+
+[repo]: https://github.com/programmer-ke/ownft-contract
+
+### Deploying the Frontend
+
+#### Vercel
+
+✏️ Edit your frontend config in `packages/nextjs/scaffold.config.ts` to
+change the `targetNetwork` to the selected network e.g
+`chains.sepolia` or `chains.optimismSepolia`
+
+💻 View your frontend at http://localhost:3000 and verify you see the correct network.
+
+📡 When you are ready to ship the frontend app...
+
+📦 Run `yarn vercel` to package up your frontend and deploy.
+
+> You might need to log in to Vercel first by running `yarn vercel:login`.
+> Once you log in (email, GitHub, etc), the default options should work.
+
+> If you want to redeploy to the same production URL you can run `yarn
+> vercel --prod`. If you omit the --prod flag it will deploy it to a
+> preview/test URL.
+
+> 🦊 Since we have deployed to a public testnet, you will now need to
+> connect using a wallet you own or use a burner wallet. By default 🔥
+> burner wallets are only available on hardhat . You can enable them
+> on every chain by setting onlyLocalBurnerWallet: false in your
+> frontend config (scaffold.config.ts in packages/nextjs/)
+
+Set the environment variables listed in `packages/nextjs/.env.example`
+in the Vercel Environment Config. You'll be prompted to redeploy for
+them to take effect.
