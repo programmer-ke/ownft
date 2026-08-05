@@ -61,6 +61,8 @@ Deploy the contract to the selected network. See the [contract repository][repo]
 
 [repo]: https://github.com/programmer-ke/ownft-contract
 
+Update the external contract address/ABI as mentioned above.
+
 ### Deploying the Frontend
 
 #### Vercel
