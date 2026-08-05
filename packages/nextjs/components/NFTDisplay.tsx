@@ -5,8 +5,8 @@ import Image from "next/image";
 import { Address } from "@scaffold-ui/components";
 import toast from "react-hot-toast";
 import { useAccount } from "wagmi";
-import { CheckIcon, PencilIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
+import { ArrowTopRightOnSquareIcon, CheckIcon, PencilIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useDeployedContractInfo, useScaffoldWriteContract, useTargetNetwork } from "~~/hooks/scaffold-eth";
 
 export type NFT = {
   id: bigint;
@@ -27,6 +27,40 @@ type NFTDisplayProps = {
   perPage: bigint;
 };
 
+const getOpenSeaNetworkSlug = (chainId: number): string | null => {
+  switch (chainId) {
+    case 1:
+      return "ethereum";
+    case 10:
+      return "optimism";
+    case 8453:
+      return "base";
+    case 137:
+      return "polygon";
+    case 11155111:
+      return "sepolia";
+    default:
+      return null;
+  }
+};
+
+const getRaribleNetwork = (chainId: number): string | null => {
+  switch (chainId) {
+    case 1:
+      return "ethereum";
+    case 10:
+      return "optimism";
+    case 8453:
+      return "base";
+    case 137:
+      return "polygon";
+    case 11155111:
+      return "sepolia";
+    default:
+      return null;
+  }
+};
+
 export default function NFTDisplay({
   loadingNFTs: loadingNFTs,
   allNFTs: allNFTs,
@@ -41,6 +75,9 @@ export default function NFTDisplay({
   const [newDescription, setNewDescription] = useState<string>("");
   const { writeContractAsync } = useScaffoldWriteContract({ contractName: "Ownft" });
   const [isSaving, setIsSaving] = useState(false);
+
+  const { data: deployedContractData } = useDeployedContractInfo({ contractName: "Ownft" });
+  const { targetNetwork } = useTargetNetwork();
 
   const handleEdit = (nftId: bigint, currentDescription: string) => {
     setEditingNftId(nftId);
@@ -143,6 +180,30 @@ export default function NFTDisplay({
                     )}
                   </div>
                   <Address address={nft.owner} />
+                  {deployedContractData?.address && (
+                    <div className="flex gap-2 mt-2">
+                      {getOpenSeaNetworkSlug(targetNetwork.id) && (
+                        <a
+                          href={`https://opensea.io/item/${getOpenSeaNetworkSlug(targetNetwork.id)}/${deployedContractData.address}/${nft.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-500 hover:underline inline-flex items-center gap-1"
+                        >
+                          OpenSea <ArrowTopRightOnSquareIcon className="h-3 w-3" />
+                        </a>
+                      )}
+                      {getRaribleNetwork(targetNetwork.id) && (
+                        <a
+                          href={`https://rarible.com/${getRaribleNetwork(targetNetwork.id)}/items/${deployedContractData.address}:${nft.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-500 hover:underline inline-flex items-center gap-1"
+                        >
+                          Rarible <ArrowTopRightOnSquareIcon className="h-3 w-3" />
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })}
